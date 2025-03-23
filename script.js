@@ -1,4 +1,5 @@
 import wordlist from "./words.js"
+import pokelist from "./pokemon.js"
 
 const standardRequireds = ["ab", "ac", "ad", "ae", "ag", "am", "au", "bi", "ci", "ce", "co", "cr", "de", "di", "ea", "eg", "es", "et", "fa", "fu", "ic", "im", "in", "la", "le", "ma", "mi", "me", "ne", "no", "pu", "pe", "qu", "re", "se", "ta", "te", "un", "v"]
 const bulletRequireds = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "l", "m", "n", "o", "p", "q", "r", "s", "t", "v", "x", "y", "z"]
@@ -6,9 +7,6 @@ const bulletRequireds = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "l", "m", 
 let textbox = null
 let timer = null
 let animationStartTime = null
-
-// this is a test
-// this is only a test
 
 // data persistence
 let highScore = localStorage.getItem("High Score") || 0
@@ -89,7 +87,7 @@ function animateCircle(timeMs) {
 	let circle = document.getElementById("circle")
 	let quickAnimationMs = 250
 
-	circle.style.animation = null
+	circle.style.animation = "pulse infinite " + timeMs / 12 + "ms"
 	circle.offsetHeight
 
 	if (animationStartTime) {
@@ -97,18 +95,18 @@ function animateCircle(timeMs) {
 		let rotation = animationOffset / timeMs * 360
 		circle.style.setProperty("--startRotation", rotation + "deg")
 
-		circle.style.animation = "spin " + quickAnimationMs + "ms"
+		circle.style.animation = "spin " + quickAnimationMs + "ms, pulse infinite " + timeMs / 12 + "ms"
 		setTimeout(() => {
-			circle.style.animation = null
+			circle.style.animation = "pulse pulse infinite " + timeMs / 12 + "ms"
 			circle.offsetHeight
 			animationStartTime = Date.now()
 			circle.style.setProperty("--startRotation", 0 + "deg")
-			circle.style.animation = "spin linear " + (timeMs - quickAnimationMs) + "ms"
+			circle.style.animation = "spin linear " + (timeMs - quickAnimationMs) + "ms, pulse infinite " + timeMs / 12 + "ms"
 		}, quickAnimationMs)
 	} else {
 		circle.offsetHeight
 		animationStartTime = Date.now()
-		circle.style.animation = "spin linear " + timeMs + "ms"
+		circle.style.animation = "spin linear " + timeMs + "ms, pulse infinite " + timeMs / 12 + "ms"
 	}
 }
 
@@ -176,6 +174,8 @@ function setScore(toValue) {
 }
 
 function failedWord() {
+	playSound(new Audio('/sounds/fail.wav'))
+
 	currentLives--
 
 	document.getElementById("failvignette").style.opacity = 1
@@ -183,6 +183,18 @@ function failedWord() {
 		document.getElementById("failvignette").style.opacity = 0
 	}, 300)
 
+	document.getElementById("hpdisplay").textContent = ""
+	document.getElementById("hpdisplay").style.animation = null
+	document.getElementById("hpdisplay").offsetHeight
+	document.getElementById("hpdisplay").style.animation = "shake 0.15s"
+	
+	for (let i = 0; i < currentLives; i++) {
+		document.getElementById("hpdisplay").textContent += "💖"
+	}
+	for (let i = 0; i < maxLives - currentLives; i++) {
+		document.getElementById("hpdisplay").textContent += "💔"
+	}
+ 
 	if (currentLives <= 0) {
 		animationStartTime = null
 		showAlert("Time's Up!<br>Your Score: " + currentScore + "<br>High Score: " + highScore, 3000)
@@ -222,6 +234,13 @@ function runGame() {
 	timeLimitMs = maxTimeLimitMs + 2000
 	currentLives = maxLives
 
+	document.getElementById("hpdisplay").textContent = ""
+	document.getElementById("hpdisplay").style.animation = null
+	
+	for (let i = 0; i < currentLives; i++) {
+		document.getElementById("hpdisplay").textContent += "💖"
+	}
+
 	document.body.appendChild(textbox)
 	timer = setTimeout(failedWord, timeLimitMs)
 	textbox.focus()
@@ -248,7 +267,9 @@ function runGame() {
 			} else {
 				document.getElementById("chardisplay").style.animation = null
 				document.getElementById("chardisplay").offsetHeight
-				document.getElementById("chardisplay").style.animation = "incorrectShake 0.15s"
+				document.getElementById("chardisplay").style.animation = "shake 0.15s"
+
+				playSound(new Audio('/sounds/incorrect.wav'))
 	
 				if (textbox.value.toLowerCase().indexOf(currentRequired) == -1) {
 					showAlert("That word does not contain the prompt", 750)
@@ -312,3 +333,18 @@ document.getElementById("bulletModeCheckbox").addEventListener("change", () => {
 document.getElementById("seedInput").addEventListener("input", () => {
 	rng.setSeed(document.getElementById("seedInput").value)
 })
+
+{
+	let flip = true;
+	document.getElementById("circle").addEventListener("animationiteration", (data) => {
+		console.log(animateCircle)
+		if (data.animationName == "pulse") {
+			let audio = new Audio('/sounds/tick.wav')
+			audio.volume = 0.25
+			audio.preservesPitch = false
+			audio.playbackRate = flip ? 2 : 1.5
+			flip = !flip
+			playSound(audio)
+		}
+	})
+}
