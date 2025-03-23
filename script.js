@@ -7,6 +7,9 @@ let textbox = null
 let timer = null
 let animationStartTime = null
 
+// this is a test
+// this is only a test
+
 // data persistence
 let highScore = localStorage.getItem("High Score") || 0
 document.getElementById("highScoreDisplay").textContent = "High Score: " + highScore
