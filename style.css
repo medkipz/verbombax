@@ -1,0 +1,246 @@
+@keyframes wobble {
+	0% { rotate: 10deg; }
+	100% { rotate: 0deg; }
+}
+
+@keyframes spin {
+	from { rotate: var(--startRotation); }
+	to { rotate: 360deg; }
+}
+
+@keyframes incorrectShake {
+	0% { transform: translateX(0); }
+	25% { transform: translateX(-10px); }
+	50% { transform: translateX(10px); }
+	75% { transform: translateX(-10px); }
+	100% { transform: translateX(0); }
+}
+
+@keyframes slideOpen {
+	0% { height: 0vh; }
+	100% { height: 20vh; }
+}
+
+@keyframes slideClose {
+	0% { height: 20vh; }
+	100% { height: 0vh; }
+}
+
+html, body {
+	margin: 0;
+	overflow: hidden;
+}
+
+body {
+	background-color: #171717;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	top: 10%;
+	height: 90%;
+}
+
+div {
+	outline: 1px solid black; /* remove later - outline is for visualization */
+	position: absolute;
+	text-align: center;
+	text-overflow: clip;
+	overflow: hidden;
+	font-family: Arial, Helvetica, sans-serif;
+	color: white;
+}
+
+.header {
+	z-index: 1;
+	top: 0;
+	width: 100vw;
+	height: 6vh;
+	display: flex;
+	flex-direction: row;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	color: #fff;
+	background-color: #333;
+}
+
+.failvignette {
+	left: 0;
+	top: 6vh;
+	width: 100vw;
+	height: 94vh;
+	opacity: 0;
+	box-shadow: inset 0 0 100vw 0vh rgba(255, 0, 0, .7), inset 0 0 0 0 rgba(255, 0, 0, 0);
+	transition: 100ms ease-in;
+}
+
+input {
+	background-color: black;
+	color: white;
+	text-align: center;	
+	position: absolute;
+}
+
+input.seedInput {
+	bottom: 10%;
+	transform: translateX(-50%);
+	width: 128px;
+	height: 14px;
+}
+
+.gameinput {
+	width: 100vw;
+	height: 100vh;
+	bottom: 10px;
+	left: 50%;
+	opacity: 0;
+	transform: translateX(-50%);
+}
+
+button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	background: linear-gradient(180deg, #3d3dc9, #1d1da1, #0e0e6d);
+	border: none;
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+button:hover {
+	background: linear-gradient(180deg, #252588, #0b0b61, #0b0b61);
+}
+
+button:active {
+	background: linear-gradient(180deg, #0b0b61, #0b0b61, #252588);
+}
+
+button.playbutton {
+	width: 15%;
+	height: 10%;
+	top: 50%;
+	font-size: 3vh;
+	padding: 10px 20px;
+}
+
+button.settingsbutton, .helpbutton {
+	width: 6vh;
+	height: 6vh;
+	padding: 5px 10px;
+	border-radius: 0;
+}
+
+button.settingsbutton {
+	font-size: 1vh;
+	right: 0;
+}
+
+button.gameplaysettingsbutton {
+	width: 10vw;
+	height: 5vh;
+	font-size: 2vh;
+	bottom: 30vh;
+}
+
+.gameplaysettings {
+	width: 20vw;
+	bottom: 30vh;
+	transform: translateY(100%);
+}
+
+.helpbutton {
+	font-size: 1vh;
+	right: 6vh;
+}
+
+.settings {
+	border-radius: 15px;
+	right: 0vw;
+	top: 6vh;
+	width: 20vw;
+	height: 50vh;
+	background-color: #808080;
+}
+
+.chardisplay {
+	position: absolute;
+	top: 50%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	height: 64px;
+	margin: 20px 0;
+}
+
+.charblock, .requiredcharblock, .highlightedcharblock {
+	position: relative;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 32px;
+	border-radius: 5px;
+	color: black;
+	background-color: white;
+	text-align: center;
+	align-content: center;
+	margin: 0 4px;
+	width: 48px;
+	height: 64px;
+}
+
+.requiredcharblock {
+	background-color: rgb(50, 50, 50);
+	color: white;
+}
+
+.highlightedcharblock {
+	background-color: blue;
+}
+
+.circle {
+	top: 40%;
+	background-color: white;
+	border-radius: 50%;
+	width: 64px;
+	height: 64px;
+	--startRotation: 0deg;
+}
+
+.circlemark {
+	background-color: blue;
+	width: 10%;
+	height: 50%;
+	transform: translateX(450%);
+	rotate: 0deg;
+	--rotate: 0deg;
+}
+
+.alert-container {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	position: fixed;
+	top: 10%;
+	display: flex;
+	flex-direction: column-reverse;
+	align-content: center;
+	align-items: center;
+	z-index: 1000;
+}
+
+.alert-box {
+	position: relative;
+	background-color: #444;
+	color: white;
+	padding: 10px 20px;
+	margin: 5px 0;
+	border-radius: 10px;
+	opacity: 1;
+	text-align: center;
+	transition: 0.5s ease-out;
+}
+
+.alert-box.fade-out {
+	opacity: 0;
+	transform: translateY(20px);
+}

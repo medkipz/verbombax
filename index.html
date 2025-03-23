@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Verbombax!</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+	<div class="header">
+		<div style="height: 100%; left: 1vw; text-align: left; display: flex; align-items: center;">Verbombax!</div>
+		<button class="settingsbutton" id="settingsButton">Settings</button>
+		<button class="helpbutton" id="helpButton">i</button>
+	</div>
+	
+	<div id="scoreDisplay">Score: 0</div>
+	<div id="highScoreDisplay">High Score: 0</div>
+
+	<div class="alert-container" id="alertContainer"></div>
+
+	<div class="failvignette" id="failvignette"></div>
+
+	<div id="mainMenu" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; flex-direction: column; transform: translateY(50vh);">
+		<button class="playbutton" id="playButton">Play</button>
+		
+		<div class="settings" id="settings" style="display: none;">
+			<input type="checkbox" id="soundEnableCheckbox" style="left:3%;top:10%" checked="true">
+			<div style="left:10%; top:10%">Enable sound effects</div>
+			<input type="checkbox" id="bulletModeCheckbox" style="left:3%;top:20%">
+			<div style="left:10%; top:20%; text-align: left;">Enable bullet mode (2 seconds per word. One letter requirements)</div>
+		</div>
+
+		<button class="gameplaysettingsbutton" id="gameplaySettingsButton">Gameplay Settings &gt;</button>
+
+		<div class="gameplaysettings" id="gameplaySettings">
+			<input type="text" id="seedInput" class="seedInput" placeholder="enter seed">
+		</div>
+	</div>
+
+	<div id="game" style="display: none; justify-content: center; align-items: center; height: 100vh; width: 100vw; flex-direction: column; transform: translateY(50vh);">
+		<div class="circle" id="circle">
+			<div class="circlemark" id="circlemark"></div>
+		</div>
+	
+		<div class="chardisplay" id="chardisplay"></div>
+	</div>
+</body>
+
+<script type="module" src="words.js"></script>
+<script type="module" src="script.js"></script>
+
+</html>
