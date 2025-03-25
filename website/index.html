@@ -14,12 +14,12 @@
 		<button class="settingsbutton" id="settingsButton">Settings</button>
 		<button class="helpbutton" id="helpButton">i</button>
 	</div>
-	
-	<div id="scoreDisplay">Score: 0</div>
-	<div id="highScoreDisplay">High Score: 0</div>
+
+	<div class="tutorial" id="tutorial" style="display: none;">
+
+	</div>
 
 	<div class="alert-container" id="alertContainer"></div>
-
 	<div class="failvignette" id="failvignette"></div>
 
 	<div id="mainMenu" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; flex-direction: column; transform: translateY(50vh);">
@@ -35,19 +35,31 @@
 		<button class="gameplaysettingsbutton" id="gameplaySettingsButton">Gameplay Settings &gt;</button>
 
 		<div class="gameplaysettings" id="gameplaySettings">
-			<input type="text" id="seedInput" class="settingsInput" style="top: 5%" placeholder="set seed">
+			<input type="text" id="seedInput" class="settingsInput" style="top: 5%" placeholder="Set seed">
 			<div style="top: 5%; left: 80%">🌱</div>
-			<input type="text" id="timeLimitInput" class="settingsInput" style="top: 25%" placeholder="set max time limit (default )">
+			<input type="text" id="timeLimitInput" class="settingsInput" style="top: 25%" placeholder="Set max time in seconds">
 			<div style="top: 25%; left: 80%">⏰</div>
-			<input type="text" id="maxLivesInput" class="settingsInput" style="top: 45%" placeholder="set max lives">
+			<input type="text" id="maxLivesInput" class="settingsInput" style="top: 45%" placeholder="Set max lives">
 			<div style="top: 45%; left: 80%">💖</div>
-			<input type="checkbox" id="pokeModeCheckbox" style="left:3%;top:65%">
-			<div style="left:10%; top:65%; text-align: left;">Use Pokémon dictionary<br>(In case you don't know Latin!)</div>
-			<div style="top: 90%; width: 100%; color: grey">changing settings disables saving your high score!</div>
+			<div style="top: 62%; width: 100%; color: #F0F0F0">Select a gamemode!</div>
+			<select class="settingsselect" id="gamemodeselect" style="top:75%">
+				<optgroup label="Latin Gamemodes">
+					<option value="standard">Standard Mode</option>
+					<option value="bullet">Bullet Mode</option>
+				</optgroup>
+				<optgroup label="Alternative Gamemodes">
+					<option value="pokemon">Pokémon Mode</option>
+				</optgroup>
+				
+			</select>
+			<div style="top: 90%; width: 100%; color: #888888">Changing settings disables saving your high score!</div>
 		</div>
 	</div>
 
 	<div id="game" style="display: none; justify-content: center; align-items: center; height: 100vh; width: 100vw; flex-direction: column; transform: translateY(50vh);">
+		<div class="highscoredisplay" style="top: 37vh; font-size: 1.5vh; color: #888888">High Score: 0</div>
+		<div class="scoredisplay" style="top: 30vh">0</div>
+
 		<div class="circle" id="circle">
 			<div class="circlemark" id="circlemark"></div>
 		</div>

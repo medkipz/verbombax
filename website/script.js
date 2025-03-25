@@ -1,8 +1,16 @@
 import wordlist from "./words.js"
 import pokelist from "./pokemon.js"
 
-const standardRequireds = ["ab", "ac", "ad", "ae", "ag", "am", "au", "bi", "ci", "ce", "co", "cr", "de", "di", "ea", "eg", "es", "et", "fa", "fu", "ic", "im", "in", "la", "le", "ma", "mi", "me", "ne", "no", "pu", "pe", "qu", "re", "se", "ta", "te", "un", "v"]
-const bulletRequireds = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "l", "m", "n", "o", "p", "q", "r", "s", "t", "v", "x", "y", "z"]
+let wordLists = {
+	"standard" : wordlist,
+	"pokemon" : pokelist
+}
+
+let requiredLists = {
+	"standard" : ["ab", "ac", "ad", "ae", "ag", "am", "au", "bi", "ci", "ce", "co", "cr", "de", "di", "ea", "eg", "es", "et", "fa", "fu", "ic", "im", "in", "la", "le", "ma", "mi", "me", "ne", "no", "pe", "qu", "re", "se", "ta", "te", "un", "v"],
+	"allLatinLetters" : ["a", "b", "c", "d", "e", "f", "g", "h", "i", "l", "m", "n", "o", "p", "q", "r", "s", "t", "v"],
+	"allLetters" : ["a", "b", "c", "d", "e", "f", "g", "h", "i", "l", "m", "n", "o", "p", "r", "s", "t", "v", "x", "y", "z"],
+}
 
 let textbox = null
 let timer = null
@@ -10,7 +18,9 @@ let animationStartTime = null
 
 // data persistence
 let highScore = localStorage.getItem("High Score") || 0
-document.getElementById("highScoreDisplay").textContent = "High Score: " + highScore
+Array.from(document.getElementsByClassName("highscoredisplay")).forEach(element => {
+	element.textContent = "High Score: " + highScore
+})
 
 // settings variables
 let isSoundEnabled = true
@@ -21,15 +31,16 @@ let timeLimitMs = 0
 let currentScore = 0
 let currentLives = 0
 let currentRequired = ""
+let scoringEnabled = false
 
 // gameplay settings variables
-let possibleRequireds = standardRequireds
 let maxTimeLimitMs = 8000
 let maxLives = 2
+let currentRequiredList = "standard"
+let currentWordList = "standard"
 
 // a modified xorshift alogorithm (https://en.wikipedia.org/wiki/xorshift)
-// In testing, the numbers it generates are roughly evenly distributed, though its probably not statistically perfect
-
+// in testing, the numbers it generates are roughly evenly distributed, though its probably not statistically perfect
 let rng = {
 	seed : Math.floor(Date.now()),
 
@@ -165,11 +176,15 @@ function displayCharacters(characters, required) {
 
 function setScore(toValue) {
 	currentScore = toValue
-	document.getElementById("scoreDisplay").textContent = "Score: " + currentScore
-	if (currentScore > highScore) {
+	Array.from(document.getElementsByClassName("scoredisplay")).forEach(element => {
+		element.textContent = currentScore
+	})
+	if (scoringEnabled && currentScore > highScore) {
 		highScore = currentScore
 		localStorage.setItem("High Score", highScore)
-		document.getElementById("highScoreDisplay").textContent = "High Score: " + highScore
+		Array.from(document.getElementsByClassName("highscoredisplay")).forEach(element => {
+			element.textContent = "High Score: " + highScore
+		})
 	}
 }
 
@@ -211,7 +226,7 @@ function failedWord() {
 		displayCharacters("", "")
 	} else {
 		textbox.value = ""
-		currentRequired = possibleRequireds[rng.nextInt(0, possibleRequireds.length - 1)] 
+		currentRequired = requiredLists[currentRequiredList][rng.nextInt(0, requiredLists[currentRequiredList].length - 1)] 
 		displayCharacters(textbox.value, currentRequired)
 		clearTimeout(timer)
 		timer = setTimeout(failedWord, timeLimitMs)
@@ -221,6 +236,8 @@ function failedWord() {
 
 // MAIN CODE
 function runGame() {
+	scoringEnabled = maxTimeLimitMs == 8000 && maxLives == 2 && currentRequiredList == "standard" && currentWordList == "standard"
+
 	document.getElementById("chardisplay").style.animation = null
 	document.getElementById("chardisplay").offsetHeight
 	document.getElementById("mainMenu").style.display = "none"
@@ -228,7 +245,7 @@ function runGame() {
 
 	textbox = document.createElement("input")
 	textbox.className = "gameinput"
-	currentRequired = possibleRequireds[rng.nextInt(0, possibleRequireds.length - 1)] 
+	currentRequired = requiredLists[currentRequiredList][rng.nextInt(0, requiredLists[currentRequiredList].length - 1)] 
 	displayCharacters(textbox.value, currentRequired)
 
 	timeLimitMs = maxTimeLimitMs + 2000
@@ -253,13 +270,13 @@ function runGame() {
 
 	textbox.addEventListener("keypress", input =>{
 		if (input.key == "Enter") {
-			if (wordlist[textbox.value.toLowerCase()] && !usedWords[textbox.value.toLowerCase()] && textbox.value.indexOf(currentRequired) != -1 ) {
+			if (wordLists[currentWordList][textbox.value.toLowerCase()] && !usedWords[textbox.value.toLowerCase()] && textbox.value.indexOf(currentRequired) != -1 ) {
 				usedWords[textbox.value.toLowerCase()] = true
 				setScore(currentScore + 1)
 				timeLimitMs = (Math.E ** (-currentScore / 50)) * maxTimeLimitMs + 2000
 	
 				textbox.value = ""
-				currentRequired = possibleRequireds[rng.nextInt(0, possibleRequireds.length - 1)] 
+				currentRequired = requiredLists[currentRequiredList][rng.nextInt(0, requiredLists[currentRequiredList].length - 1)] 
 				displayCharacters(textbox.value, currentRequired)
 				clearTimeout(timer)
 				timer = setTimeout(failedWord, timeLimitMs)
@@ -275,7 +292,7 @@ function runGame() {
 					showAlert("That word does not contain the prompt", 750)
 				} else if (usedWords[textbox.value.toLowerCase()]) {
 					showAlert("You've already used that word", 750)
-				} else if (!wordlist[textbox.value.toLowerCase()]) {
+				} else if (!wordLists[currentWordList][textbox.value.toLowerCase()]) {
 					showAlert("That word does not exist", 750)
 				}
 			}
@@ -323,21 +340,59 @@ document.getElementById("soundEnableCheckbox").addEventListener("change", () => 
 document.getElementById("bulletModeCheckbox").addEventListener("change", () => {
 	if (document.getElementById("bulletModeCheckbox").checked) {
 		maxTimeLimitMs = 1000
-		possibleRequireds = bulletRequireds
+		currentRequiredList = "bullet"
 	} else {
 		maxTimeLimitMs = 8000
-		possibleRequireds = standardRequireds
+		currentRequiredList = "standard"
 	}
 })
 
 document.getElementById("seedInput").addEventListener("input", () => {
-	rng.setSeed(document.getElementById("seedInput").value)
+	if (document.getElementById("seedInput").value == "") {
+		rng.setSeed(Date.now())
+	} else {
+		rng.setSeed(document.getElementById("seedInput").value)
+	}
+})
+
+document.getElementById("timeLimitInput").addEventListener("input", () => {
+	if (!parseInt(document.getElementById("timeLimitInput").value) || document.getElementById("timeLimitInput").value == "" || document.getElementById("timeLimitInput").value * 1000 < 2000) {
+		maxTimeLimitMs = 8000
+	} else {
+		maxTimeLimitMs = document.getElementById("timeLimitInput").value * 1000 - 2000
+	}
+})
+
+document.getElementById("maxLivesInput").addEventListener("input", () => {
+	if (!parseInt(document.getElementById("maxLivesInput").value) || document.getElementById("maxLivesInput").value == "" || document.getElementById("maxLivesInput").value < 1) {
+		maxLives = 2
+	} else {
+		maxLives = Math.min(document.getElementById("maxLivesInput").value, 10000)
+	}
+})
+
+document.getElementById("gamemodeselect").addEventListener("change", () => {
+	let gameMode = document.getElementById("gamemodeselect").value
+
+	if (gameMode == "standard") {
+		currentWordList = "standard"
+		currentRequiredList = "standard"
+		maxTimeLimitMs = 8000
+	} else if (gameMode == "bullet") {
+		currentWordList = "standard"
+		currentRequiredList = "allLatinLetters"
+		maxTimeLimitMs = 1000
+	} else if (gameMode == "pokemon") {
+		currentWordList = "pokemon"
+		currentRequiredList = "allLetters"
+		maxTimeLimitMs = 8000
+	} 
 })
 
 {
 	let flip = true;
-	document.getElementById("circle").addEventListener("animationiteration", (data) => {
-		console.log(animateCircle)
+	document.getElementById("circle").addEventListener("animationiteration", data => {
+		console.log("test	")
 		if (data.animationName == "pulse") {
 			let audio = new Audio('/sounds/tick.wav')
 			audio.volume = 0.25
