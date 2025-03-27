@@ -12,14 +12,13 @@ let requiredLists = {
 	"allLetters" : ["a", "b", "c", "d", "e", "f", "g", "h", "i", "l", "m", "n", "o", "p", "r", "s", "t", "v", "x", "y", "z"],
 }
 
-let textbox = null
 let timer = null
 let animationStartTime = null
 
 // data persistence
 let highScore = localStorage.getItem("High Score") || 0
 Array.from(document.getElementsByClassName("highscoredisplay")).forEach(element => {
-	element.textContent = "High Score: " + highScore
+	element.textContent = highScore
 })
 
 // settings variables
@@ -210,24 +209,19 @@ function failedWord() {
 		document.getElementById("hpdisplay").textContent += "💔"
 	}
  
-	if (currentLives <= 0) {
+	if (currentLives <= 0) { // game over
 		animationStartTime = null
-		showAlert("Time's Up!<br>Your Score: " + currentScore + "<br>High Score: " + highScore, 3000)
-		setScore(0)
 		usedWords = []
 		rng.setSeed(document.getElementById("seedInput").value ? document.getElementById("seedInput").value : Date.now())
-	
-		if (textbox) {
-			document.body.removeChild(textbox)
-		}
-	
-		document.getElementById("mainMenu").style.display = "flex"
-		document.getElementById("game").style.display = "none"
+		document.getElementById("gameinput").value = ""
+		document.getElementById("results").style.display = "block"
+		document.getElementById("results").offsetHeight
+		document.getElementById("results").style.opacity = 1
 		displayCharacters("", "")
 	} else {
-		textbox.value = ""
+		document.getElementById("gameinput").value = ""
 		currentRequired = requiredLists[currentRequiredList][rng.nextInt(0, requiredLists[currentRequiredList].length - 1)] 
-		displayCharacters(textbox.value, currentRequired)
+		displayCharacters(document.getElementById("gameinput").value, currentRequired)
 		clearTimeout(timer)
 		timer = setTimeout(failedWord, timeLimitMs)
 		animateCircle(timeLimitMs)
@@ -236,6 +230,7 @@ function failedWord() {
 
 // MAIN CODE
 function runGame() {
+	setScore(0)
 	scoringEnabled = maxTimeLimitMs == 8000 && maxLives == 2 && currentRequiredList == "standard" && currentWordList == "standard"
 
 	document.getElementById("chardisplay").style.animation = null
@@ -243,10 +238,8 @@ function runGame() {
 	document.getElementById("mainMenu").style.display = "none"
 	document.getElementById("game").style.display = "flex"
 
-	textbox = document.createElement("input")
-	textbox.className = "gameinput"
 	currentRequired = requiredLists[currentRequiredList][rng.nextInt(0, requiredLists[currentRequiredList].length - 1)] 
-	displayCharacters(textbox.value, currentRequired)
+	displayCharacters(document.getElementById("gameinput").value, currentRequired)
 
 	timeLimitMs = maxTimeLimitMs + 2000
 	currentLives = maxLives
@@ -258,58 +251,59 @@ function runGame() {
 		document.getElementById("hpdisplay").textContent += "💖"
 	}
 
-	document.body.appendChild(textbox)
 	timer = setTimeout(failedWord, timeLimitMs)
-	textbox.focus()
-
-	textbox.addEventListener("input", () => {
-		displayCharacters(textbox.value, currentRequired)
-	})
+	document.getElementById("gameinput").focus()
 
 	animateCircle(timeLimitMs)
-
-	textbox.addEventListener("keypress", input =>{
-		if (input.key == "Enter") {
-			if (wordLists[currentWordList][textbox.value.toLowerCase()] && !usedWords[textbox.value.toLowerCase()] && textbox.value.indexOf(currentRequired) != -1 ) {
-				usedWords[textbox.value.toLowerCase()] = true
-				setScore(currentScore + 1)
-				timeLimitMs = (Math.E ** (-currentScore / 50)) * maxTimeLimitMs + 2000
-	
-				textbox.value = ""
-				currentRequired = requiredLists[currentRequiredList][rng.nextInt(0, requiredLists[currentRequiredList].length - 1)] 
-				displayCharacters(textbox.value, currentRequired)
-				clearTimeout(timer)
-				timer = setTimeout(failedWord, timeLimitMs)
-				animateCircle(timeLimitMs)
-			} else {
-				document.getElementById("chardisplay").style.animation = null
-				document.getElementById("chardisplay").offsetHeight
-				document.getElementById("chardisplay").style.animation = "shake 0.15s"
-
-				playSound(new Audio('/sounds/incorrect.wav'))
-	
-				if (textbox.value.toLowerCase().indexOf(currentRequired) == -1) {
-					showAlert("That word does not contain the prompt", 750)
-				} else if (usedWords[textbox.value.toLowerCase()]) {
-					showAlert("You've already used that word", 750)
-				} else if (!wordLists[currentWordList][textbox.value.toLowerCase()]) {
-					showAlert("That word does not exist", 750)
-				}
-			}
-		} else {
-			// Might be bad code... But the text box is updated after this event is fired, so we need to wait a millisecend to get the updated value
-			setTimeout(() =>  {
-				let audio = new Audio('/sounds/cowbell.wav')
-				audio.volume = 0.35
-				audio.playbackRate = Math.min(0.5 * textbox.value.length / 10 + .75, 1.5)
-				audio.preservesPitch = false
-				playSound(audio)
-			}, 1)
-		}
-	})
 }
 
 document.getElementById("playButton").addEventListener("click", runGame)
+
+document.getElementById("gameinput").addEventListener("keypress", input => {
+	if (currentLives <= 0) {
+		console.log("test")
+		return
+	}
+
+	if (input.key == "Enter") {
+		if (wordLists[currentWordList][document.getElementById("gameinput").value.toLowerCase()] && !usedWords[document.getElementById("gameinput").value.toLowerCase()] && document.getElementById("gameinput").value.indexOf(currentRequired) != -1 ) {
+			usedWords[document.getElementById("gameinput").value.toLowerCase()] = true
+			setScore(currentScore + 1)
+			timeLimitMs = (Math.E ** (-currentScore / 50)) * maxTimeLimitMs + 2000
+
+			document.getElementById("gameinput").value = ""
+			currentRequired = requiredLists[currentRequiredList][rng.nextInt(0, requiredLists[currentRequiredList].length - 1)] 
+			displayCharacters(document.getElementById("gameinput").value, currentRequired)
+			clearTimeout(timer)
+			timer = setTimeout(failedWord, timeLimitMs)
+			animateCircle(timeLimitMs)
+		} else {
+			document.getElementById("chardisplay").style.animation = null
+			document.getElementById("chardisplay").offsetHeight
+			document.getElementById("chardisplay").style.animation = "shake 0.15s"
+
+			playSound(new Audio('/sounds/incorrect.wav'))
+
+			if (document.getElementById("gameinput").value.toLowerCase().indexOf(currentRequired) == -1) {
+				showAlert("That word does not contain the prompt", 750)
+			} else if (usedWords[document.getElementById("gameinput").value.toLowerCase()]) {
+				showAlert("You've already used that word", 750)
+			} else if (!wordLists[currentWordList][document.getElementById("gameinput").value.toLowerCase()]) {
+				showAlert("That word does not exist", 750)
+			}
+		}
+	} else {
+		// Might be bad code... But the text box is updated after this event is fired, so we need to wait a millisecend to get the updated value
+		setTimeout(() =>  {
+			let audio = new Audio('/sounds/cowbell.wav')
+			audio.volume = 0.35
+			audio.playbackRate = Math.min(0.5 * document.getElementById("gameinput").value.length / 10 + .75, 1.5)
+			audio.preservesPitch = false
+			playSound(audio)
+		}, 1)
+	}
+})
+
 document.getElementById("settingsButton").addEventListener("click", () => {
 	if (document.getElementById("settings").style.display == "none") {
 		document.getElementById("settings").style.display = "flex"
@@ -331,6 +325,12 @@ document.getElementById("gameplaySettingsButton").addEventListener("click", () =
 	}
 
 	flip = !flip
+})
+
+document.getElementById("gameinput").addEventListener("input", () => {
+	if (currentLives > 0) {
+		displayCharacters(document.getElementById("gameinput").value, currentRequired)
+	}
 })
 
 document.getElementById("soundEnableCheckbox").addEventListener("change", () => {
@@ -392,14 +392,45 @@ document.getElementById("gamemodeselect").addEventListener("change", () => {
 {
 	let flip = true;
 	document.getElementById("circle").addEventListener("animationiteration", data => {
-		console.log("test	")
-		if (data.animationName == "pulse") {
+		if (data.animationName == "pulse" && currentLives > 0) {
 			let audio = new Audio('/sounds/tick.wav')
 			audio.volume = 0.25
 			audio.preservesPitch = false
-			audio.playbackRate = flip ? 2 : 1.5
-			flip = !flip
+			// eslint-disable-next-line
+			audio.playbackRate = (flip = !flip) ? 2 : 1.5	
 			playSound(audio)
+		}
+	})
+}
+{
+	let debounce = false
+
+	document.getElementById("resultsplayagainbutton").addEventListener("click", () => {
+		if (!debounce) {
+			debounce = true
+
+			document.getElementById("results").style.opacity = 0
+			
+			setTimeout(() => {
+				document.getElementById("results").style.display = "none"
+				debounce = false
+				runGame()
+			}, 500)
+		}
+	})
+	
+	document.getElementById("resultsmenubutton").addEventListener("click", () => {
+		if (!debounce) {
+			debounce = true
+
+			document.getElementById("results").style.opacity = 0
+			document.getElementById("game").style.display = "none"
+				document.getElementById("mainMenu").style.display = "flex"
+			
+			setTimeout(() => {
+				document.getElementById("results").style.display = "none"
+				debounce = false
+			}, 500)
 		}
 	})
 }

@@ -50,11 +50,20 @@
 				<optgroup label="Alternative Gamemodes">
 					<option value="pokemon">Pokémon Mode</option>
 				</optgroup>
-				
 			</select>
 			<div style="top: 90%; width: 100%; color: #888888">Changing settings disables saving your high score!</div>
 		</div>
 	</div>
+
+	<div id="results" class="results" style="display: none">
+		<div style="width: 100%; top: 7%; font-size: 2.5vw; font-weight: bold">Game Over!</div>
+		<div style="left: 25%; transform: translateX(-50%); font-size: 2vw; top: 35%; width: 50%">Score:</div>
+		<div class="scoredisplay" id="resultstext" style="left: 25%; transform: translateX(-50%); font-size: 2.5vw; top: 50%">0</div>
+		<div style="left: 75%; transform: translateX(-50%); font-size: 2vw; top: 35%; width: 50%">High Score:</div>
+		<div class="highscoredisplay" id="resultscore" style="left: 75%; transform: translateX(-50%); font-size: 2.5vw; top: 50%">0</div>
+		<button id="resultsmenubutton" class="resultsbutton" style="border-bottom-left-radius: 1.25vw">Menu</button>
+		<button id="resultsplayagainbutton" class="resultsbutton" style="left: 50%; border-bottom-right-radius: 1.25vw">Play Again</button>
+	</div>	
 
 	<div id="game" style="display: none; justify-content: center; align-items: center; height: 100vh; width: 100vw; flex-direction: column; transform: translateY(50vh);">
 		<div class="highscoredisplay" style="top: 37vh; font-size: 1.5vh; color: #888888">High Score: 0</div>
@@ -67,10 +76,8 @@
 		<div class="chardisplay" id="chardisplay"></div>
 
 		<div class="hpdisplay" id="hpdisplay"></div>
-	</div>
 
-	<div id="gameEnd" style="display: none">
-
+		<input class="gameinput" id="gameinput" type="text"></input>
 	</div>
 
 </body>
