@@ -222,7 +222,7 @@ function setScore(toValue) {
 }
 
 function failedWord() {
-	playSound(new Audio('/sounds/fail.wav'))
+	playSound(new Audio('./sounds/fail.wav'))
 
 	currentLives--
 
@@ -315,7 +315,7 @@ document.getElementById("gameinput").addEventListener("keypress", input => {
 			document.getElementById("chardisplay").offsetHeight
 			document.getElementById("chardisplay").style.animation = "shake 0.15s"
 
-			playSound(new Audio('/sounds/incorrect.wav'))
+			playSound(new Audio('./sounds/incorrect.wav'))
 
 			if (document.getElementById("gameinput").value.toLowerCase().indexOf(currentRequired) == -1) {
 				showAlert("That word does not contain the prompt", 750)
@@ -328,7 +328,7 @@ document.getElementById("gameinput").addEventListener("keypress", input => {
 	} else {
 		// Might be bad code... But the text box is updated after this event is fired, so we need to wait a millisecend to get the updated value
 		setTimeout(() =>  {
-			let audio = new Audio('/sounds/cowbell.wav')
+			let audio = new Audio('./sounds/cowbell.wav')
 			audio.volume = 0.35
 			audio.playbackRate = Math.min(0.5 * document.getElementById("gameinput").value.length / 10 + .75, 1.5)
 			audio.preservesPitch = false
@@ -420,7 +420,7 @@ document.getElementById("gamemodeselect").addEventListener("change", () => {
 	let flip = true;
 	document.getElementById("circle").addEventListener("animationiteration", data => {
 		if (data.animationName == "pulse" && currentLives > 0) {
-			let audio = new Audio('/sounds/tick.wav')
+			let audio = new Audio('./sounds/tick.wav')
 			audio.volume = 0.25
 			audio.preservesPitch = false
 			// eslint-disable-next-line
