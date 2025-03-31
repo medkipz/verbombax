@@ -1,5 +1,5 @@
 import wordlist from "./words.js"
-import pokelist from "../pokemon.js"
+import pokelist from "./pokemon.js"
 
 let wordLists = {
 	"standard" : wordlist,
