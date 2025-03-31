@@ -182,6 +182,7 @@ select.settingsselect {
 	width: 40vh;
 	bottom: 30vh;
 	transform: translateY(100%);
+	transition: height 0.3s;
 }
 
 .helpbutton {
@@ -190,12 +191,13 @@ select.settingsselect {
 }
 
 .settings {
-	border-radius: 15px;
+	display: flex;
 	right: 0vw;
 	top: 6vh;
 	width: 20vw;
-	height: 50vh;
-	background-color: #808080;
+	height: 0vh;
+	transition: height 0.3s;
+	background-color: #444;
 }
 
 .hpdisplay {
@@ -209,6 +211,7 @@ select.settingsselect {
 .chardisplay {
 	top: 50vh;
 	display: flex;
+	overflow-y:none;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
@@ -296,6 +299,19 @@ select.settingsselect {
 .alert-box.fade-out {
 	opacity: 0;
 	transform: translateY(20px);
+}
+
+.tutorial {
+	opacity: 0;
+	width: 50vh;
+	height: 70vh;
+	transform: translateY(-50%);
+	border-radius: 1.25vw 1.25vw 1.25vw 1.25vw;
+	background-color: #444;
+	top: 50vh;
+	transition: opacity 0.5s;
+	display: block;
+	z-index: 15;
 }
 
 .results {

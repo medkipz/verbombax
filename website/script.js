@@ -38,6 +38,10 @@ let maxLives = 2
 let currentRequiredList = "standard"
 let currentWordList = "standard"
 
+if (!localStorage.getItem("Has Viewed Tutorial") || localStorage.getItem("Has Viewed Tutorial") == "false") {
+	showTutorial()
+}
+
 // a modified xorshift alogorithm (https://en.wikipedia.org/wiki/xorshift)
 // in testing, the numbers it generates are roughly evenly distributed, though its probably not statistically perfect
 let rng = {
@@ -67,8 +71,39 @@ let rng = {
 	},
 }
 
-if (!localStorage.getItem("HasViewedTutorial")) {
-	// TODO display tutorial
+async function showTutorial() {
+	const tutorialElement = document.getElementById("tutorial");
+	const tutorialCharDisplay = document.getElementById("tutorialchardisplay");
+
+	if (tutorialElement.style.display == "none") {
+		tutorialElement.style.display = "block"
+		tutorialElement.style.opacity = 1
+
+		const tutorialSteps = [
+			{ characters: "", required: "er", delay: 700 },
+			{ characters: "v", required: "er", delay: 300 },
+			{ characters: "ve", required: "er", delay: 300 },
+			{ characters: "ver", required: "er", delay: 300 },
+			{ characters: "verb", required: "er", delay: 300 },
+			{ characters: "verba", required: "er", delay: 700 },
+			{ characters: "", required: "qu", delay: 700 },
+			{ characters: "q", required: "qu", delay: 300 },
+			{ characters: "qu", required: "qu", delay: 300 },
+			{ characters: "qui", required: "qu", delay: 300 },
+			{ characters: "quid", required: "qu", delay: 700 },
+		]
+
+		do  {
+		for (const step of tutorialSteps) {
+				if (tutorialElement.style.display == "none") {break}
+				displayCharacters(step.characters, step.required, tutorialCharDisplay)
+				await new Promise(resolve => setTimeout(resolve, step.delay))
+			}
+		} while (tutorialElement.style.display == "block")
+		
+
+		localStorage.setItem("Has Viewed Tutorial", true)
+	}
 }
 
 function showAlert(message, timeMs) {
@@ -120,8 +155,7 @@ function animateCircle(timeMs) {
 	}
 }
 
-function displayCharacters(characters, required) {
-	let chardisplay = document.getElementById("chardisplay")
+function displayCharacters(characters, required, chardisplay) {
 	let indextohighlight
 	let characterstohighlight
 	let numberofcharactershighlighted = 0
@@ -158,7 +192,7 @@ function displayCharacters(characters, required) {
 				newcharblock.className = "charblock"
 			}
 
-			document.getElementById("chardisplay").appendChild(newcharblock)
+			chardisplay.appendChild(newcharblock)
 		}
 		//animates final charblock
 		newcharblock.style.animation = "wobble 0.15s"
@@ -169,7 +203,7 @@ function displayCharacters(characters, required) {
 		let newcharblock = document.createElement("div")
 		newcharblock.className = "requiredcharblock"
 		newcharblock.textContent = character
-		document.getElementById("chardisplay").appendChild(newcharblock)
+		chardisplay.appendChild(newcharblock)
 	}
 }
 
@@ -182,7 +216,7 @@ function setScore(toValue) {
 		highScore = currentScore
 		localStorage.setItem("High Score", highScore)
 		Array.from(document.getElementsByClassName("highscoredisplay")).forEach(element => {
-			element.textContent = "High Score: " + highScore
+			element.textContent = highScore
 		})
 	}
 }
@@ -214,14 +248,14 @@ function failedWord() {
 		usedWords = []
 		rng.setSeed(document.getElementById("seedInput").value ? document.getElementById("seedInput").value : Date.now())
 		document.getElementById("gameinput").value = ""
-		document.getElementById("results").style.display = "block"
+		document.getElementById("results").style.display = "flex"
 		document.getElementById("results").offsetHeight
 		document.getElementById("results").style.opacity = 1
-		displayCharacters("", "")
+		displayCharacters("", "", document.getElementById("chardisplay"))
 	} else {
 		document.getElementById("gameinput").value = ""
 		currentRequired = requiredLists[currentRequiredList][rng.nextInt(0, requiredLists[currentRequiredList].length - 1)] 
-		displayCharacters(document.getElementById("gameinput").value, currentRequired)
+		displayCharacters(document.getElementById("gameinput").value, currentRequired, document.getElementById("chardisplay"))
 		clearTimeout(timer)
 		timer = setTimeout(failedWord, timeLimitMs)
 		animateCircle(timeLimitMs)
@@ -239,7 +273,7 @@ function runGame() {
 	document.getElementById("game").style.display = "flex"
 
 	currentRequired = requiredLists[currentRequiredList][rng.nextInt(0, requiredLists[currentRequiredList].length - 1)] 
-	displayCharacters(document.getElementById("gameinput").value, currentRequired)
+	displayCharacters(document.getElementById("gameinput").value, currentRequired, document.getElementById("chardisplay"))
 
 	timeLimitMs = maxTimeLimitMs + 2000
 	currentLives = maxLives
@@ -261,7 +295,6 @@ document.getElementById("playButton").addEventListener("click", runGame)
 
 document.getElementById("gameinput").addEventListener("keypress", input => {
 	if (currentLives <= 0) {
-		console.log("test")
 		return
 	}
 
@@ -273,7 +306,7 @@ document.getElementById("gameinput").addEventListener("keypress", input => {
 
 			document.getElementById("gameinput").value = ""
 			currentRequired = requiredLists[currentRequiredList][rng.nextInt(0, requiredLists[currentRequiredList].length - 1)] 
-			displayCharacters(document.getElementById("gameinput").value, currentRequired)
+			displayCharacters(document.getElementById("gameinput").value, currentRequired, document.getElementById("chardisplay"))
 			clearTimeout(timer)
 			timer = setTimeout(failedWord, timeLimitMs)
 			animateCircle(timeLimitMs)
@@ -304,22 +337,26 @@ document.getElementById("gameinput").addEventListener("keypress", input => {
 	}
 })
 
-document.getElementById("settingsButton").addEventListener("click", () => {
-	if (document.getElementById("settings").style.display == "none") {
-		document.getElementById("settings").style.display = "flex"
+document.getElementById("helpbutton").addEventListener("click", () => {
+	showTutorial()
+})
+
+document.getElementById("settingsbutton").addEventListener("click", () => {
+	if (document.getElementById("settings").style.height == "0vh") {
+		document.getElementById("settings").style.height = "10vh"
+		document.getElementById("settings").offsetHeight
 	} else {
-		document.getElementById("settings").style.display = "none"
+		document.getElementById("settings").style.height = "0vh"
+		document.getElementById("settings").offsetHeight
 	}
 })
 
 let flip = true
 document.getElementById("gameplaySettingsButton").addEventListener("click", () => {
 	if (flip) {
-		document.getElementById("gameplaySettings").style.animation = "slideOpen 0.3s"
 		document.getElementById("gameplaySettings").style.height = "20vh"
 		document.getElementById("gameplaySettingsButton").textContent = "Gameplay Settings v"
 	} else {
-		document.getElementById("gameplaySettings").style.animation = "slideClose 0.2s"
 		document.getElementById("gameplaySettings").style.height = "0vh"
 		document.getElementById("gameplaySettingsButton").textContent = "Gameplay Settings >"
 	}
@@ -329,22 +366,12 @@ document.getElementById("gameplaySettingsButton").addEventListener("click", () =
 
 document.getElementById("gameinput").addEventListener("input", () => {
 	if (currentLives > 0) {
-		displayCharacters(document.getElementById("gameinput").value, currentRequired)
+		displayCharacters(document.getElementById("gameinput").value, currentRequired, document.getElementById("chardisplay"))
 	}
 })
 
 document.getElementById("soundEnableCheckbox").addEventListener("change", () => {
 	isSoundEnabled = document.getElementById("soundEnableCheckbox").checked
-})
-
-document.getElementById("bulletModeCheckbox").addEventListener("change", () => {
-	if (document.getElementById("bulletModeCheckbox").checked) {
-		maxTimeLimitMs = 1000
-		currentRequiredList = "bullet"
-	} else {
-		maxTimeLimitMs = 8000
-		currentRequiredList = "standard"
-	}
 })
 
 document.getElementById("seedInput").addEventListener("input", () => {

@@ -11,12 +11,17 @@
 <body>
 	<div class="header">
 		<div style="height: 100%; left: 1vw; text-align: left; display: flex; align-items: center;">Verbombax!</div>
-		<button class="settingsbutton" id="settingsButton">Settings</button>
-		<button class="helpbutton" id="helpButton">i</button>
+		<button class="settingsbutton" id="settingsbutton"><img src="/images/Settings.png" style="height: 90%; image-rendering: pixelated;" alt="Settings"></button>
+		<button class="helpbutton" id="helpbutton"><img src="/images/Help.png" style="height: 90%; image-rendering: pixelated;" alt="Help"></button>
 	</div>
 
 	<div class="tutorial" id="tutorial" style="display: none;">
-
+		<div style="width: 100%; top: 4vh; font-size: 5vh;">How to Play</div>
+		<div style="width: 100%; top: 15vh; font-size: 3vh;">Type a Latin word that contains the letters presented.</div>
+		<div style="width: 100%; top: 25vh; font-size: 3vh;">Make sure not to run out of time.</div>
+		<div class="chardisplay" id="tutorialchardisplay" style="transform: translate(-50%, -50%); left: 50%; top: 50%"></div>
+		<div style="width: 100%; top: 47vh; font-size: 3vh;">Aim for a high score!</div>
+		<button style="width: 20vh; height: 8vh; font-size: 3vh; bottom: 4vh; transform: translateX(-50%); left: 50%" onclick="document.getElementById('tutorial').style.opacity = 0; setTimeout(() => document.getElementById('tutorial').style.display = 'none', 500)">Got It!</button>
 	</div>
 
 	<div class="alert-container" id="alertContainer"></div>
@@ -24,12 +29,9 @@
 
 	<div id="mainMenu" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; flex-direction: column; transform: translateY(50vh);">
 		<button class="playbutton" id="playButton">Play</button>
-		
-		<div class="settings" id="settings" style="display: none;">
-			<input type="checkbox" id="soundEnableCheckbox" style="left:3%;top:10%" checked="true">
-			<div style="left:10%; top:10%">Enable sound effects</div>
-			<input type="checkbox" id="bulletModeCheckbox" style="left:3%;top:20%">
-			<div style="left:10%; top:20%; text-align: left;">Enable bullet mode (2 seconds per word. One letter requirements)</div>
+		<div class="settings" id="settings">
+			<input type="checkbox" id="soundEnableCheckbox" style="left:3%;top:20%" checked="true">
+			<div style="left:10%; top:20%">Enable sound effects</div>
 		</div>
 
 		<button class="gameplaysettingsbutton" id="gameplaySettingsButton">Gameplay Settings &gt;</button>
@@ -66,7 +68,7 @@
 	</div>	
 
 	<div id="game" style="display: none; justify-content: center; align-items: center; height: 100vh; width: 100vw; flex-direction: column; transform: translateY(50vh);">
-		<div class="highscoredisplay" style="top: 37vh; font-size: 1.5vh; color: #888888">High Score: 0</div>
+		<div class="highscoredisplay" style="top: 37vh; font-size: 1.5vh; color: #888888">0</div>
 		<div class="scoredisplay" style="top: 30vh">0</div>
 
 		<div class="circle" id="circle">
