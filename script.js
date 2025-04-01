@@ -265,7 +265,7 @@ function failedWord() {
 // MAIN CODE
 function runGame() {
 	setScore(0)
-	scoringEnabled = maxTimeLimitMs == 8000 && maxLives == 2 && currentRequiredList == "standard" && currentWordList == "standard"
+	scoringEnabled = maxTimeLimitMs == 8000 && maxLives == 2 && currentRequiredList == "standard" && currentWordList == "standard" && document.getElementById("seedInput").value == ""
 
 	document.getElementById("chardisplay").style.animation = null
 	document.getElementById("chardisplay").offsetHeight
