@@ -271,6 +271,7 @@ function runGame() {
 	document.getElementById("chardisplay").offsetHeight
 	document.getElementById("mainMenu").style.display = "none"
 	document.getElementById("game").style.display = "flex"
+	document.getElementById("resultstextarea").textContent = ""
 
 	currentRequired = requiredLists[currentRequiredList][rng.nextInt(0, requiredLists[currentRequiredList].length - 1)] 
 	displayCharacters(document.getElementById("gameinput").value, currentRequired, document.getElementById("chardisplay"))
@@ -301,6 +302,9 @@ document.getElementById("gameinput").addEventListener("keypress", input => {
 	if (input.key == "Enter") {
 		if (wordLists[currentWordList][document.getElementById("gameinput").value.toLowerCase()] && !usedWords[document.getElementById("gameinput").value.toLowerCase()] && document.getElementById("gameinput").value.indexOf(currentRequired) != -1 ) {
 			usedWords[document.getElementById("gameinput").value.toLowerCase()] = true
+
+			document.getElementById("resultstextarea").textContent += document.getElementById("gameinput").value.toLowerCase() + "\n"
+
 			setScore(currentScore + 1)
 			timeLimitMs = (Math.E ** (-currentScore / 50)) * maxTimeLimitMs + 2000
 
@@ -351,17 +355,15 @@ document.getElementById("settingsbutton").addEventListener("click", () => {
 	}
 })
 
-let flip = true
+
 document.getElementById("gameplaySettingsButton").addEventListener("click", () => {
-	if (flip) {
+	if (document.getElementById("gameplaySettings").style.height != "20vh") {
 		document.getElementById("gameplaySettings").style.height = "20vh"
 		document.getElementById("gameplaySettingsButton").textContent = "Gameplay Settings v"
 	} else {
 		document.getElementById("gameplaySettings").style.height = "0vh"
 		document.getElementById("gameplaySettingsButton").textContent = "Gameplay Settings >"
 	}
-
-	flip = !flip
 })
 
 document.getElementById("gameinput").addEventListener("input", () => {

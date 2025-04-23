@@ -203,19 +203,19 @@ select.settingsselect {
 .hpdisplay {
 	top: 60vh;
 	width: 100%;
-	height: 5vhpx;
+	height: 10vh;
 	font-size: 5vh;
 }
 
 
 .chardisplay {
-	top: 50vh;
+	top: 47vh;
 	display: flex;
 	overflow-y:none;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	height: 64px;
+	height: 12vh;
 	margin: 20px 0;
 }
 
@@ -316,13 +316,14 @@ select.settingsselect {
 
 .results {
 	opacity: 0;
-	width: 25vw;
-	height: 25vw;
+	width: 50vh;
+	height: 50vh;
 	transform: translateY(-50%);
 	border-radius: 5%;
 	background-color: #333;
 	top: 50vh;
 	transition: opacity 0.5s;
+	overflow:visible;
 	display: block;
 	z-index: 10;
 }
