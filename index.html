@@ -38,11 +38,11 @@
 		<button class="gameplaysettingsbutton" id="gameplaySettingsButton">Gameplay Settings &gt;</button>
 
 		<div class="gameplaysettings" id="gameplaySettings">
-			<input type="text" id="seedInput" class="settingsInput" style="top: 5%" placeholder="Set seed">
+			<input type="text" id="seedInput" class="settingsInput" style="top: 5%" spellcheck="false" autocomplete="off" placeholder="Set seed">
 			<div style="top: 5%; left: 80%">🌱</div>
-			<input type="text" id="timeLimitInput" class="settingsInput" style="top: 25%" placeholder="Set max time in seconds">
+			<input type="text" id="timeLimitInput" class="settingsInput" style="top: 25%" spellcheck="false" autocomplete="off" placeholder="Set max time in seconds">
 			<div style="top: 25%; left: 80%">⏰</div>
-			<input type="text" id="maxLivesInput" class="settingsInput" style="top: 45%" placeholder="Set max lives">
+			<input type="text" id="maxLivesInput" class="settingsInput" style="top: 45%" spellcheck="false" autocomplete="off" placeholder="Set max lives">
 			<div style="top: 45%; left: 80%">💖</div>
 			<div style="top: 62%; width: 100%; color: #F0F0F0">Select a gamemode!</div>
 			<select class="settingsselect" id="gamemodeselect" style="top:75%">
@@ -66,7 +66,7 @@
 		<div class="highscoredisplay" id="resultscore" style="left: 75%; transform: translateX(-50%); font-size: 2.5vw; top: 50%">0</div>
 		<button id="resultsmenubutton" class="resultsbutton" style="border-bottom-left-radius: 1.25vw">Menu</button>
 		<button id="resultsplayagainbutton" class="resultsbutton" style="left: 50%; border-bottom-right-radius: 1.25vw">Play Again</button>
-		<textarea id="resultstextarea" style="position: absolute; width: 50%; height: 80%; left: 110%; top: 10%; background-color: #000; color: #FFF; resize: none; overflow: scroll;" readonly></textarea>
+		<textarea id="resultstextarea" autocomplete="off" spellcheck="false" style="position: absolute; width: 50%; height: 80%; left: 110%; top: 10%; background-color: #000; color: #FFF; resize: none; overflow: scroll;" readonly></textarea>
 		<div style="width: 50%; left: 110%; height:10%; font-size: 3vh">Used Words:</div>
 	</div>	
 
@@ -82,7 +82,7 @@
 
 		<div class="hpdisplay" id="hpdisplay"></div>
 
-		<input class="gameinput" id="gameinput" type="text"></input>
+		<input class="gameinput" id="gameinput" type="text" spellcheck="false" autocomplete="off"></input>
 	</div>
 
 </body>
